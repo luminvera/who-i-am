@@ -75,6 +75,17 @@ const QWEN_PORTAL_DEFAULT_COST = {
   cacheWrite: 0,
 };
 
+const ZAI_BASE_URL = "https://api.z.ai/api/coding/paas/v4";
+const ZAI_DEFAULT_MODEL_ID = "glm-4.7";
+const ZAI_DEFAULT_CONTEXT_WINDOW = 128000;
+const ZAI_DEFAULT_MAX_TOKENS = 8192;
+const ZAI_DEFAULT_COST = {
+  input: 0,
+  output: 0,
+  cacheRead: 0,
+  cacheWrite: 0,
+};
+
 const OLLAMA_BASE_URL = "http://127.0.0.1:11434/v1";
 const OLLAMA_API_BASE_URL = "http://127.0.0.1:11434";
 const OLLAMA_DEFAULT_CONTEXT_WINDOW = 128000;
@@ -352,6 +363,25 @@ function buildSyntheticProvider(): ProviderConfig {
   };
 }
 
+function buildZaiProvider(): ProviderConfig {
+  return {
+    baseUrl: ZAI_BASE_URL,
+    api: "openai-completions",
+    models: [
+      {
+        id: ZAI_DEFAULT_MODEL_ID,
+        name: "GLM 4.7",
+        provider: "zai",
+        contextWindow: ZAI_DEFAULT_CONTEXT_WINDOW,
+        maxTokens: ZAI_DEFAULT_MAX_TOKENS,
+        input: ["text"],
+        reasoning: true,
+        cost: ZAI_DEFAULT_COST,
+      },
+    ],
+  };
+}
+
 export function buildXiaomiProvider(): ProviderConfig {
   return {
     baseUrl: XIAOMI_BASE_URL,
@@ -444,6 +474,13 @@ export async function resolveImplicitProviders(params: {
     resolveApiKeyFromProfiles({ provider: "xiaomi", store: authStore });
   if (xiaomiKey) {
     providers.xiaomi = { ...buildXiaomiProvider(), apiKey: xiaomiKey };
+  }
+
+  const zaiKey =
+    resolveEnvApiKeyVarName("zai") ??
+    resolveApiKeyFromProfiles({ provider: "zai", store: authStore });
+  if (zaiKey) {
+    providers.zai = { ...buildZaiProvider(), apiKey: zaiKey };
   }
 
   // Ollama provider - only add if explicitly configured
