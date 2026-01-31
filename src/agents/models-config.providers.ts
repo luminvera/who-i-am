@@ -371,7 +371,6 @@ function buildZaiProvider(): ProviderConfig {
       {
         id: ZAI_DEFAULT_MODEL_ID,
         name: "GLM 4.7",
-        provider: "zai",
         contextWindow: ZAI_DEFAULT_CONTEXT_WINDOW,
         maxTokens: ZAI_DEFAULT_MAX_TOKENS,
         input: ["text"],
