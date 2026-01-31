@@ -15,6 +15,10 @@ services:
         value: /data/workspace
       - key: OPENCLAW_GATEWAY_TOKEN
         generateValue: true
+      - key: ZAI_API_KEY
+        sync: false
+      - key: OPENCLAW_DEFAULT_MODEL
+        value: zai/glm-4.7
     disk:
       name: openclaw-data
       mountPath: /data
